@@ -1,25 +1,35 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import axios from 'axios'
+import type { NextApiRequest, NextApiResponse } from "next";
+import axios from "axios";
 
 type Data = {
-    name: string
-}
+  name?: string;
+  error?: string;
+};
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<Data>
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
 ) {
-    const options = { method: 'GET', headers: { accept: 'application/json' } };
-    const apiKey = process.env.ALCHEMY_KEY;
+  const apiKey = process.env.ALCHEMY_KEY;
+  const owner = "vitalik.eth";
+  const pageSize = 100;
 
-    try {
-        const response = await axios.get(`https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getContractsForOwner?owner=vitalik.eth&pageSize=100&withMetadata=true`, options)
-        const { data } = response;
-        res.status(200).json(data)
-    } catch (err) {
-        console.log(err);
-        // @ts-ignore
-        res.status(500).json(err)
-    }
+  if (!apiKey) {
+    res.status(200).json({ error: "No API key provided" });
+  }
+
+  if (!owner) {
+    res.status(200).json({ error: "No owner provided" });
+  }
+
+  try {
+    const response = await axios.get(
+      `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getContractsForOwner?owner=${owner}&pageSize=${pageSize}&withMetadata=true`
+    );
+    const { data } = response;
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json(e as Error);
+  }
 }
