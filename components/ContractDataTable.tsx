@@ -1,4 +1,4 @@
-import { /* useMantineTheme, */ Text, Table, Badge } from '@mantine/core';
+import { /* useMantineTheme, */ createStyles, Text, Table, Badge } from "@mantine/core";
 
 type ContractData = {
     address: string;
@@ -6,8 +6,6 @@ type ContractData = {
     deployedBlockNumber: number;
     name: string;
     symbol: string;
-    tokenId: string;
-    tokenType: string;
     totalBalance: number;
 };
 
@@ -15,25 +13,37 @@ type ContractDataTableProps = {
     contractAddresses: ContractData[];
 };
 
+const useStyles = createStyles((theme) => ({
+    table: {
+        padding: "3rem",
+        textAlign: "center"
+    },
+
+    tableHeading: {
+        textAlign: "center"
+    },
+}));
+
 export default function ContractDataTable({ contractAddresses }: ContractDataTableProps) {
     // const theme = useMantineTheme();
+    const { classes } = useStyles();
 
     return (
-        <div>
-            <Text /* size="xl" style={{ color: theme.colors.dark }} */>
-                Contract Data Table
-            </Text>
+        <div className={classes.table}>
+            <h2
+            /* size="xl" style={{ color: theme.colors.dark }} */
+            >
+                Contracts and Tokens
+            </h2>
             <Table>
                 <thead>
                     <tr>
-                        <th>Contract Address</th>
-                        <th>Contract Deployer</th>
-                        <th>Deployed Block Number</th>
-                        <th>Name</th>
-                        <th>Symbol</th>
-                        <th>Token ID</th>
-                        <th>Token Type</th>
-                        <th>Total Balance</th>
+                        <th style={{textAlign: "center"}}>Contract Address</th>
+                        <th style={{textAlign: "center"}}>Contract Deployer</th>
+                        <th style={{textAlign: "center"}}>Deployed Block Number</th>
+                        <th style={{textAlign: "center"}}>Name</th>
+                        <th style={{textAlign: "center"}}>Symbol</th>
+                        <th style={{textAlign: "center"}}>Total Balance</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,8 +58,6 @@ export default function ContractDataTable({ contractAddresses }: ContractDataTab
                                     {contractData.symbol}
                                 </Badge>
                             </td>
-                            <td>{contractData.tokenId}</td>
-                            <td>{contractData.tokenType}</td>
                             <td>{contractData.totalBalance}</td>
                         </tr>
                     ))}
