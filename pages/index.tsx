@@ -7,8 +7,6 @@ type ContractData = {
     deployedBlockNumber: number;
     name: string;
     symbol: string;
-    tokenId: string;
-    tokenType: string;
     totalBalance: number;
 };
 
@@ -20,6 +18,7 @@ export default function Home() {
             try {
                 const response = await fetch("/api/get-contract-for-owner");
                 const data = await response.json();
+                console.log('contract data', data);
                 setContractData(data.contracts);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -36,7 +35,6 @@ export default function Home() {
 
     return (
         <>
-            <h1>Contract Data</h1>
             <ContractDataTable contractAddresses={contractData} />
         </>
     )
