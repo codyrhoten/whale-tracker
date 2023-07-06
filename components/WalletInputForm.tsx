@@ -1,6 +1,7 @@
-import { useState, FormEvent } from "react";
-import { createStyles, Input, Button } from "@mantine/core";
+import { ChangeEvent } from "react";
+import { createStyles, TextInput, Button } from "@mantine/core";
 import { ethers } from "ethers";
+import { useForm } from "@mantine/form";
 
 const useStyles = createStyles((theme) => ({
     formContainer: {
@@ -15,6 +16,9 @@ const useStyles = createStyles((theme) => ({
         marginTop: theme.spacing.md,
         marginBottom: "1.5rem",
     },
+    error: {
+        color: theme.colors.red[7],
+    }
 }));
 
 interface FormProps {
@@ -22,31 +26,43 @@ interface FormProps {
 }
 
 export default function WalletInputForm({ onSubmit }: FormProps) {
-    const [address, setAddress] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const { classes } = useStyles();
+    const form = useForm({
+        initialValues: {
+            address: "",
+        },
+        validate: {
+            address: (value) => ethers.isAddress(value) ? null : "Invalid Ethereum address",
+        },
+    });
 
-    const handleSubmit = (event: FormEvent) => {
-        event.preventDefault();
+    const { values, errors, setValues, reset, isValid } = form;
 
-        if (!ethers.isAddress(address)) {
-            setError("Invalid Ethereum address");
-            return;
-        }
-
-        onSubmit(address);
-        setAddress("");
-        setError(null);
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setValues({ ...values, [name]: value });
     };
+
+    const handleSubmit = () => {
+        if (isValid()) {
+            onSubmit(values.address);
+            reset();
+        }
+    };
+
+    const { classes } = useStyles();
 
     return (
         <div className={classes.formContainer}>
-            <form onSubmit={handleSubmit} className={classes.form}>
-                <Input
-                    value={address}
-                    onChange={(event) => setAddress(event.currentTarget.value)}
+            <form onSubmit={form.onSubmit(handleSubmit)} className={classes.form}>
+                {errors.address && (
+                    <div className={classes.error}>{errors.address}</div>
+                )}
+                <TextInput
+                    name="address"
+                    value={values.address}
+                    onChange={handleChange}
                     placeholder="Enter Ethereum address"
-                    error={error}
+                    error={Boolean(errors.address)}
                     required
                     className={classes.input}
                 />

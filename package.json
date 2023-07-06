@@ -13,6 +13,7 @@
     "@emotion/server": "^11.11.0",
     "@mantine/core": "^6.0.13",
     "@mantine/ds": "^6.0.13",
+    "@mantine/form": "^6.0.16",
     "@mantine/hooks": "^6.0.13",
     "@mantine/next": "^6.0.13",
     "@mantine/prism": "^6.0.13",
