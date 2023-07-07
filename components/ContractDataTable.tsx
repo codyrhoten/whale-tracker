@@ -1,4 +1,4 @@
-import { /* useMantineTheme, */ createStyles, Table, Badge, Tooltip } from "@mantine/core";
+import { /* useMantineTheme, */ createStyles, Table, Badge, Tooltip, Container } from "@mantine/core";
 
 type ContractData = {
     address: string;
@@ -14,13 +14,9 @@ type ContractDataTableProps = {
 };
 
 const useStyles = createStyles((theme) => ({
-    table: {
-        padding: "3rem",
-        textAlign: "center"
-    },
-
     tableHeading: {
-        textAlign: "center"
+        textAlign: "center",
+        marginBottom: "2rem"
     },
 }));
 
@@ -35,9 +31,10 @@ export default function ContractDataTable({ contractAddresses }: ContractDataTab
     const { classes } = useStyles();
 
     return (
-        <div className={classes.table}>
+        <Container>
             <h2
             /* size="xl" style={{ color: theme.colors.dark }} */
+                className={classes.tableHeading}
             >
                 Contracts and Tokens
             </h2>
@@ -77,6 +74,6 @@ export default function ContractDataTable({ contractAddresses }: ContractDataTab
                     ))}
                 </tbody>
             </Table>
-        </div>
+        </Container>
     );
 };
