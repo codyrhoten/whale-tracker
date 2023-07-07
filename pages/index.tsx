@@ -2,19 +2,16 @@ import { useEffect, useState } from "react"
 import ContractDataTable from "@/components/ContractDataTable";
 
 type ContractData = {
-    owner: string;
-    contracts: {
-        address: string;
-        contractDeployer: string;
-        deployedBlockNumber: number;
-        name: string;
-        symbol: string;
-        totalBalance: number;
-    }[];
+    address: string;
+    contractDeployer: string;
+    deployedBlockNumber: number;
+    name: string;
+    symbol: string;
+    totalBalance: number;
 };
 
 export default function Home() {
-    const [contractData, setContractData] = useState<ContractData>({ owner: "", contracts: [] });
+    const [contractData, setContractData] = useState<ContractData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +19,7 @@ export default function Home() {
                 const response = await fetch("/api/get-contract-for-owner");
                 const data = await response.json();
                 console.log('contract data', data);
-                setContractData(data);
+                setContractData(data.contracts);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -38,7 +35,7 @@ export default function Home() {
 
     return (
         <>
-            <ContractDataTable contractData={contractData} />
+            <ContractDataTable contractAddresses={contractData} />
         </>
     )
 }
