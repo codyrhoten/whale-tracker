@@ -1,4 +1,4 @@
-import { /* useMantineTheme, */ createStyles, Table, Badge, Tooltip, Container } from "@mantine/core";
+import { createStyles, Table, Badge, Tooltip, Container } from "@mantine/core";
 
 type ContractData = {
     address: string;
@@ -27,23 +27,17 @@ function shortenAddress(address: string): string {
 };
 
 export default function ContractDataTable({ contractAddresses }: ContractDataTableProps) {
-    // const theme = useMantineTheme();
     const { classes } = useStyles();
 
     return (
         <Container>
-            <h2
-            /* size="xl" style={{ color: theme.colors.dark }} */
-                className={classes.tableHeading}
-            >
-                Contracts and Tokens
-            </h2>
+            <h2 className={classes.tableHeading}>Contracts and Tokens</h2>
             <Table>
                 <thead>
                     <tr>
                         <th style={{ textAlign: "center" }}>Contract Address</th>
                         <th style={{ textAlign: "center" }}>Contract Deployer</th>
-                        <th style={{ textAlign: "center" }}>Deployed Block Number</th>
+                        <th style={{ textAlign: "center" }}>Block #</th>
                         <th style={{ textAlign: "center" }}>Name</th>
                         <th style={{ textAlign: "center" }}>Symbol</th>
                         <th style={{ textAlign: "center" }}>Total Balance</th>
