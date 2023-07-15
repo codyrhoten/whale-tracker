@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   const apiKey = process.env.ALCHEMY_KEY;
   const owner = "vitalik.eth";

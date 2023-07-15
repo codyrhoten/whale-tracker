@@ -1,19 +1,16 @@
 import { /* useMantineTheme, */ createStyles, Table, Badge, Tooltip, Container } from "@mantine/core";
 
 type ContractData = {
-    owner: string;
-    contracts: {
-        address: string;
-        contractDeployer: string;
-        deployedBlockNumber: number;
-        name: string;
-        symbol: string;
-        totalBalance: number;
-    }[];
+    address: string;
+    contractDeployer: string;
+    deployedBlockNumber: number;
+    name: string;
+    symbol: string;
+    totalBalance: number;
 };
 
 type ContractDataTableProps = {
-    contractData: ContractData;
+    contractAddresses: ContractData[];
 };
 
 const useStyles = createStyles((theme) => ({
@@ -29,17 +26,17 @@ function shortenAddress(address: string): string {
     return start + "..." + end;
 };
 
-export default function ContractDataTable({ contractData }: ContractDataTableProps) {
+export default function ContractDataTable({ contractAddresses }: ContractDataTableProps) {
     // const theme = useMantineTheme();
     const { classes } = useStyles();
 
     return (
         <Container>
             <h2
-                /* size="xl" style={{ color: theme.colors.dark }} */
+            /* size="xl" style={{ color: theme.colors.dark }} */
                 className={classes.tableHeading}
             >
-                Deployed Contracts by<br />{contractData.owner}
+                Contracts and Tokens
             </h2>
             <Table>
                 <thead>
@@ -53,26 +50,26 @@ export default function ContractDataTable({ contractData }: ContractDataTablePro
                     </tr>
                 </thead>
                 <tbody>
-                    {contractData.contracts.map((data, i) => (
+                    {contractAddresses.map((contractData, i) => (
                         <tr key={i}>
                             <td>
-                                <Tooltip label={data.address}>
-                                    <span>{shortenAddress(data.address)}</span>
+                                <Tooltip label={contractData.address}>
+                                    <span>{shortenAddress(contractData.address)}</span>
                                 </Tooltip>
                             </td>
                             <td>
-                                <Tooltip label={data.contractDeployer}>
-                                    <span>{shortenAddress(data.contractDeployer)}</span>
+                                <Tooltip label={contractData.contractDeployer}>
+                                    <span>{shortenAddress(contractData.contractDeployer)}</span>
                                 </Tooltip>
                             </td>
-                            <td>{data.deployedBlockNumber}</td>
-                            <td>{data.name}</td>
+                            <td>{contractData.deployedBlockNumber}</td>
+                            <td>{contractData.name}</td>
                             <td>
                                 <Badge /* color={theme.colors.primary} */>
-                                    {data.symbol}
+                                    {contractData.symbol}
                                 </Badge>
                             </td>
-                            <td>{data.totalBalance}</td>
+                            <td>{contractData.totalBalance}</td>
                         </tr>
                     ))}
                 </tbody>
