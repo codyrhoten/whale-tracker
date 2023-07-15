@@ -1,17 +1,10 @@
-import { ChangeEvent } from "react";
-import { createStyles, TextInput, Button } from "@mantine/core";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { createStyles, TextInput, Button, Container } from "@mantine/core";
 import { ethers } from "ethers";
 import { useForm } from "@mantine/form";
+import axios from "axios";
 
 const useStyles = createStyles((theme) => ({
-    formContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-    form: {
-        width: '50%',
-        maxWidth: '500px',
-    },
     input: {
         marginTop: theme.spacing.md,
         marginBottom: "1.5rem",
@@ -26,6 +19,9 @@ interface FormProps {
 }
 
 export default function WalletInputForm({ onSubmit }: FormProps) {
+    const [address, setAddress] = useState('');
+    const [error, setError] = useState('');
+
     const form = useForm({
         initialValues: {
             address: "",
@@ -35,45 +31,64 @@ export default function WalletInputForm({ onSubmit }: FormProps) {
         },
     });
 
-    const { values, errors, setValues, reset, isValid } = form;
+    const { errors, reset, isValid, setValues } = form;
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setValues({ ...values, [name]: value });
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+
+        if (!address) {
+            setError('Please enter an Ethereum address');
+            return;
+        }
+
+        if (!isValid()) {
+            setError(errors.address?.toString() || 'Invalid Ethereum address.');
+            return;
+        }
+
+        try {
+            const response = await axios.get(
+                '/api/get-contract-for-owner',
+                {
+                    params: { owner: address },
+                }
+            );
+            const data = response.data;
+
+            if (data.error) {
+                setError(data.error);
+            } else {
+                onSubmit(address)
+                reset();
+                setError('');
+            }
+        } catch (err) {
+            setError('An error occurred.');
+        }
     };
 
-    const handleSubmit = () => {
-        if (isValid()) {
-            onSubmit(values.address);
-            reset();
-        }
+    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setAddress(e.target.value);
+        setError('');
+        setValues({ address: e.target.value });
     };
 
     const { classes } = useStyles();
 
     return (
-        <div className={classes.formContainer}>
-            <form onSubmit={form.onSubmit(handleSubmit)} className={classes.form}>
-                {errors.address && (
-                    <div className={classes.error}>{errors.address}</div>
-                )}
+        <Container>
+            <form onSubmit={handleSubmit}>
+                {error && <div className={classes.error}>{error}</div>}
                 <TextInput
-                    name="address"
-                    value={values.address}
-                    onChange={handleChange}
+                    value={address}
+                    onChange={handleAddressChange}
                     placeholder="Enter Ethereum address"
-                    error={Boolean(errors.address)}
-                    required
                     className={classes.input}
                 />
-                <Button
-                    type="submit"
-                    variant="outline"
-                    fullWidth
-                >
+                <Button type="submit" variant="outline" fullWidth>
                     Submit
                 </Button>
             </form>
-        </div>
+        </Container>
     );
 };
