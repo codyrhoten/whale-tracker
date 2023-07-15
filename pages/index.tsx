@@ -16,9 +16,15 @@ export default function Home() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("/api/get-contract-for-owner");
+                const response = await fetch("/api/get-contract-for-owner", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ address: "vitalik.eth" }),
+                });
                 const data = await response.json();
-                console.log('contract data', data);
+                console.log("contract data", data);
                 setContractData(data.contracts);
             } catch (error) {
                 console.error("Error fetching data:", error);
