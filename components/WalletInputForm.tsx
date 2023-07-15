@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { createStyles, TextInput, Button, Container } from "@mantine/core";
-import { ethers } from "ethers";
+import { ethers, Provider } from "ethers";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 
@@ -21,6 +21,40 @@ interface FormProps {
 export default function WalletInputForm({ onSubmit }: FormProps) {
     const [address, setAddress] = useState('');
     const [error, setError] = useState('');
+
+    const isValidENSAddress = async (ensAddress: string) => {
+        try {
+            // const { JsonRpcProvider } = Provider;
+
+            const resolvedAddress = await Provider.JsonRpcProvider.resolveName(ensAddress);
+            return ethers.isAddress(resolvedAddress);
+        } catch (error) {
+            console.error('Error validating ENS address:', error);
+            return false;
+        }
+    };
+
+    const validateWalletAddress = async (address: string) => {
+        let isValidAddress = false;
+
+        if (address.startsWith('0x')) {
+            const isValid = ethers.isAddress(address);
+
+            if (isValid) isValidAddress = true;
+        }
+
+        if (!address.startsWith('0x')) {
+            const isValid = isValidENSAddress(address);
+
+            if (isValid) isValidAddress = true;
+        }
+    };
+
+    // Usage
+    // const ensAddress = 'example.eth';
+    // isValidENSAddress(ensAddress).then((isValid) => {
+    //     console.log(`Is ENS address valid? ${isValid}`);
+    // });
 
     const form = useForm({
         initialValues: {
