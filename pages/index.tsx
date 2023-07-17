@@ -17,10 +17,9 @@ export default function Home() {
     const [error, setError] = useState("");
 
     const handleSetContractData = (data: any) => {
-        console.log(data);
-
         setContractData(data);
     };
+
     // const [tableData, setTableData] = useState({});
 
     // useEffect(() => {
@@ -52,9 +51,10 @@ export default function Home() {
     return (
         <>
             <WalletInputForm setContractData={handleSetContractData} address={address} error={error} setAddress={setAddress} setError={setError} />
-            {Object.values(contractData).length && (
-                <ContractDataTable contractAddresses={contractData} />
-            )}
+            {
+                Object.values(contractData).length > 0 &&
+                    <ContractDataTable contractAddresses={contractData} />
+            }
         </>
     );
 }

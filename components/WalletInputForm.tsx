@@ -4,6 +4,15 @@ import { ethers, providers } from "ethers";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 
+type ContractData = {
+    address: string;
+    contractDeployer: string;
+    deployedBlockNumber: number;
+    name: string;
+    symbol: string;
+    totalBalance: number;
+};
+
 const useStyles = createStyles((theme) => ({
     input: {
         marginTop: theme.spacing.md,
@@ -14,14 +23,19 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-export default function WalletInputForm({ setContractData, address, error, setAddress, setError }: {
+export default function WalletInputForm({
+    setContractData,
+    address,
+    error,
+    setAddress,
+    setError
+}: {
     address: string;
     setAddress: (address: string) => void;
     error: string;
     setError: (error: string) => void;
-    setContractData: (error: string) => void;
+    setContractData: (contractData: ContractData[]) => void;
 }) {
-
     console.log('address', address);
 
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
@@ -75,14 +89,13 @@ export default function WalletInputForm({ setContractData, address, error, setAd
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        console.log('handleSubmit');
 
-        /* if (!address) {
+        if (!address) {
             setError("Please enter an Ethereum address");
             return;
         }
 
-        if (!isValid()) {
+        /* if (!isValid()) {
             setError(errors.address?.toString() || "Invalid Ethereum address.");
             return;
         } */
@@ -102,6 +115,7 @@ export default function WalletInputForm({ setContractData, address, error, setAd
 
             if (data.error) {
                 setError(data.error);
+                setContractData([])
             } else {
                 setContractData(data.contracts);
                 reset();
@@ -109,6 +123,7 @@ export default function WalletInputForm({ setContractData, address, error, setAd
             }
         } catch (err) {
             setError("An error occurred.");
+            setContractData([]);
         }
     };
 
