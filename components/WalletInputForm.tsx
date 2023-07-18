@@ -1,6 +1,6 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import { createStyles, TextInput, Button, Container } from "@mantine/core";
-import { ethers, providers } from "ethers";
+import { ethers } from "ethers";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 
@@ -85,7 +85,7 @@ export default function WalletInputForm({
         },
     });
 
-    const { errors, reset, isValid, setValues } = form;
+    const { reset, setValues } = form;
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -95,22 +95,17 @@ export default function WalletInputForm({
             return;
         }
 
-        /* if (!isValid()) {
-            setError(errors.address?.toString() || "Invalid Ethereum address.");
-            return;
-        } */
-
-        console.log('1');
-
         try {
-            const response = await fetch("/api/get-contract-for-owner", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ address }),
-            });
-            const data = await response.json();
+            const response = await axios.post(
+                '/api/get-contract-for-owner',
+                { address },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            const { data } = response;
             console.log('data', data)
 
             if (data.error) {

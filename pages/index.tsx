@@ -20,40 +20,18 @@ export default function Home() {
         setContractData(data);
     };
 
-    // const [tableData, setTableData] = useState({});
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await fetch("/api/get-contract-for-owner", {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify({ address: "vitalik.eth" }),
-    //             });
-    //             const data = await response.json();
-    //             console.log("contract data", data);
-    //             setContractData(data.contracts);
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //         }
-    //     };
-
-    //     fetchData(); // Call the async function to initiate the fetch request
-
-    //     // Cleanup function (optional)
-    //     return () => {
-    //         // Perform any necessary cleanup here (e.g., cancel any pending requests)
-    //     };
-    // }, []);
-
     return (
         <>
-            <WalletInputForm setContractData={handleSetContractData} address={address} error={error} setAddress={setAddress} setError={setError} />
+            <WalletInputForm 
+                setContractData={handleSetContractData} 
+                address={address} 
+                error={error} 
+                setAddress={setAddress} 
+                setError={setError} 
+            />
             {
                 Object.values(contractData).length > 0 &&
-                    <ContractDataTable contractAddresses={contractData} />
+                <ContractDataTable contractAddresses={contractData} />
             }
         </>
     );
