@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent } from "react";
 import { createStyles, TextInput, Button, Container } from "@mantine/core";
 import { ethers } from "ethers";
-import { useForm } from "@mantine/form";
 import axios from "axios";
 
 type ContractData = {
@@ -43,7 +42,6 @@ export default function WalletInputForm({
 
     const isValidENSAddress = async (address: string) => {
         try {
-
             const resolvedAddress = await provider.resolveName(address);
             if (!resolvedAddress) return false;
             return ethers.utils.isAddress(resolvedAddress);
@@ -71,27 +69,19 @@ export default function WalletInputForm({
         return isValidAddress;
     };
 
-    const form = useForm({
-        initialValues: {
-            address: "",
-        },
-        validate: {
-            address: async (value) => {
-                const isValid = await validateWalletAddress(value);
-                if (!isValid) {
-                    return "Invalid Ethereum address";
-                }
-            },
-        },
-    });
-
-    const { reset, setValues } = form;
-
     const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
+        e.preventDefault();        
+        const isValid = await validateWalletAddress(address);
+
+        if (!isValid) {
+            setError("Invalid Ethereum address");
+            setContractData([]);
+            return;
+        }
 
         if (!address) {
             setError("Please enter an Ethereum address");
+            setContractData([]);
             return;
         }
 
@@ -113,7 +103,6 @@ export default function WalletInputForm({
                 setContractData([])
             } else {
                 setContractData(data.contracts);
-                reset();
                 setError("");
             }
         } catch (err) {
@@ -125,7 +114,6 @@ export default function WalletInputForm({
     const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);
         setError("");
-        setValues({ address: e.target.value });
     };
 
     const { classes } = useStyles();
