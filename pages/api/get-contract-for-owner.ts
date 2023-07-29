@@ -2,14 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 
-type Data = {
-  name?: string;
-  error?: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   const apiKey = process.env.ALCHEMY_KEY;
   const { address } = req.body;
