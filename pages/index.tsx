@@ -22,16 +22,21 @@ export default function Home() {
 
     return (
         <>
-            <WalletInputForm 
-                setContractData={handleSetContractData} 
-                address={address} 
-                error={error} 
-                setAddress={setAddress} 
-                setError={setError} 
+            <WalletInputForm
+                setContractData={handleSetContractData}
+                address={address}
+                error={error}
+                setAddress={setAddress}
+                setError={setError}
             />
             {
                 Object.values(contractData).length > 0 &&
                 <ContractDataTable contractAddresses={contractData} />
+            }
+            {
+                !error && 
+                Object.values(contractData).length === 0 &&
+                <p style={{ textAlign: "center", marginTop: "2rem" }}>This address doesn't own a contract.</p>
             }
         </>
     );
