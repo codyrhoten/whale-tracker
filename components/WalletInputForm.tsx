@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent } from "react";
-import { createStyles, TextInput, Button, Container } from "@mantine/core";
+import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ const useStyles = createStyles((theme) => ({
     },
     error: {
         color: theme.colors.red[7],
+        marginTop: "1.25rem"
     },
 }));
 
@@ -70,7 +71,7 @@ export default function WalletInputForm({
     };
 
     const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();        
+        e.preventDefault();
         const isValid = await validateWalletAddress(address);
 
         if (!isValid) {
@@ -121,6 +122,10 @@ export default function WalletInputForm({
     return (
         <Container>
             <form onSubmit={handleSubmit}>
+                <Switch
+                    label="Auto-fill with your connected wallet address"
+                    radius="lg"
+                />
                 {error && <div className={classes.error}>{error}</div>}
                 <TextInput
                     value={address}
