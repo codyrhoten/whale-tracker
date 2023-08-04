@@ -7,20 +7,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const apiKey = process.env.ALCHEMY_KEY;
-  const owner = "vitalik.eth";
-  const pageSize = 100;
-
-  if (!apiKey) {
-    res.status(200).json({ error: "No API key provided" });
-  }
-
-  if (!owner) {
-    res.status(200).json({ error: "No owner provided" });
-  }
+  const { address } = req.body;
 
   try {
     const response = await axios.get(
-      `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getContractsForOwner?owner=${owner}&pageSize=${pageSize}&withMetadata=true`
+      `https://eth-mainnet.g.alchemy.com/nft/v2/${apiKey}/getContractsForOwner?owner=${address}&pageSize=100&withMetadata=true`
     );
     const { data } = response;
     res.status(200).json(data);
