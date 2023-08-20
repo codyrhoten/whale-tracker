@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState, ChangeEvent } from "react";
 import ContractDataTable from "@/components/ContractDataTable";
 import WalletInputForm from "@/components/WalletInputForm";
 
@@ -13,20 +13,24 @@ type ContractData = {
 
 export default function Home() {
     const [contractData, setContractData] = useState<ContractData[]>([]);
-    const [address, setAddress] = useState("");
+    const address = useRef("");
     const [error, setError] = useState("");
 
     const handleSetContractData = (data: any) => {
         setContractData(data);
     };
 
+    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+        address.current = e.target.value;
+      };
+
     return (
         <>
             <WalletInputForm
-                setContractData={handleSetContractData}
                 address={address}
+                setContractData={handleSetContractData}
+                onAddressChange={handleAddressChange}
                 error={error}
-                setAddress={setAddress}
                 setError={setError}
             />
             {
@@ -34,7 +38,7 @@ export default function Home() {
                 <ContractDataTable contractAddresses={contractData} />
             }
             {
-                !error && 
+                error !== "" &&
                 Object.values(contractData).length === 0 &&
                 <p style={{ textAlign: "center", marginTop: "2rem" }}>This address doesn't own a contract.</p>
             }

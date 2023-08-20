@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
 import axios from "axios";
@@ -25,18 +25,19 @@ const useStyles = createStyles((theme) => ({
 
 export default function WalletInputForm({
     setContractData,
+    onAddressChange,
     address,
     error,
-    setAddress,
     setError
 }: {
-    address: string;
-    setAddress: (address: string) => void;
     error: string;
+    address: any;
+    onAddressChange: (e: ChangeEvent<HTMLInputElement>) => void;
     setError: (error: string) => void;
     setContractData: (contractData: ContractData[]) => void;
 }) {
     console.log('address', address);
+    const [checked, setChecked] = useState(false);
 
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
     const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyApiKey);
@@ -112,10 +113,10 @@ export default function WalletInputForm({
         }
     };
 
-    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+    /* const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);
         setError("");
-    };
+    }; */
 
     const { classes } = useStyles();
 
@@ -125,11 +126,12 @@ export default function WalletInputForm({
                 <Switch
                     label="Auto-fill with your connected wallet address"
                     radius="lg"
+                    onChange={(e) => setChecked(e.currentTarget.checked)}
                 />
                 {error && <div className={classes.error}>{error}</div>}
                 <TextInput
-                    value={address}
-                    onChange={handleAddressChange}
+                    value={address.current}
+                    onChange={onAddressChange}
                     placeholder="Enter Ethereum address"
                     className={classes.input}
                 />
