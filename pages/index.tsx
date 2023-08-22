@@ -20,9 +20,11 @@ export default function Home() {
         setContractData(data);
     };
 
+    // CHANGE THIS TO SIMPLY UPDATE THE ADDRESS STATE TO THE VALUE WITHIN THE INPUT FIELD
+    // CURRENTLY IT UPDATES WHEN THE SWITCH IS CLICKED ONLY BY THE LAST TYPED KEY BEFORE IT WAS CLICKED
     const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
         address.current = e.target.value;
-      };
+    };
 
     return (
         <>

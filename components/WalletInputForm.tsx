@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useWalletContext } from "@/contexts/WalletContext";
 import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
 import axios from "axios";
@@ -37,7 +38,8 @@ export default function WalletInputForm({
     setContractData: (contractData: ContractData[]) => void;
 }) {
     console.log('address', address);
-    const [checked, setChecked] = useState(false);
+    const walletContext = useWalletContext();
+    const [checked, setChecked] = useState(false); // MOVE THIS TO INDEX AND PASS TO THIS ONE AS PROP
 
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
     const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyApiKey);
@@ -123,11 +125,15 @@ export default function WalletInputForm({
     return (
         <Container>
             <form onSubmit={handleSubmit}>
-                <Switch
-                    label="Auto-fill with your connected wallet address"
-                    radius="lg"
-                    onChange={(e) => setChecked(e.currentTarget.checked)}
-                />
+                {
+                    walletContext &&
+                    <Switch
+                        label="Auto-fill with your connected wallet address"
+                        radius="lg"
+                        checked={checked}
+                        onChange={(e) => setChecked(e.currentTarget.checked)}
+                    />
+                }
                 {error && <div className={classes.error}>{error}</div>}
                 <TextInput
                     value={address.current}

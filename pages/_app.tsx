@@ -8,6 +8,7 @@ import { mainnet } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { MantineProvider } from '@mantine/core';
+import { WalletProvider } from '@/contexts/WalletContext';
 import { Layout } from '@/components/Layout';
 
 export default function App(props: AppProps) {
@@ -49,9 +50,11 @@ export default function App(props: AppProps) {
                             colorScheme: 'light',
                         }}
                     >
-                        <Layout>
-                            <Component {...pageProps} />
-                        </Layout>
+                        <WalletProvider>
+                            <Layout>
+                                <Component {...pageProps} />
+                            </Layout>
+                        </WalletProvider>
                     </MantineProvider>
                 </RainbowKitProvider>
             </WagmiConfig>
