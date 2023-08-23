@@ -17,7 +17,7 @@ export function useWalletContext() {
 }
 
 export function WalletProvider({ children }: WalletProviderProps) {
-    const [connectedWalletAddress, setConnectedWalletAddress] = useState('');
+    const [connectedWalletAddress, setConnectedWalletAddress] = useState<string>('');
 
     const contextValue = {
         connectedWalletAddress,
