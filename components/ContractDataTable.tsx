@@ -35,42 +35,46 @@ export default function ContractDataTable({
     const { classes } = useStyles();
 
     return (
-        <Container className={classes.container}>
-            <h2 className={classes.tableHeading}>Owned Contracts</h2>
-            <Table striped highlightOnHover withBorder withColumnBorders>
-                <thead>
-                    <tr>
-                        <th>Contract</th>
-                        <th>Deployer</th>
-                        <th>Block</th>
-                        <th>Name</th>
-                        <th>Symbol</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {contractAddresses.map((contractData, i) => (
-                        <tr key={i}>
-                            <td>
-                                <Tooltip label={contractData.address}>
-                                    <span>{shortenAddress(contractData.address)}</span>
-                                </Tooltip>
-                            </td>
-                            <td>
-                                <Tooltip label={contractData.contractDeployer}>
-                                    <span>{shortenAddress(contractData.contractDeployer)}</span>
-                                </Tooltip>
-                            </td>
-                            <td>{contractData.deployedBlockNumber}</td>
-                            <td>{contractData.name}</td>
-                            <td>
-                                <Badge /* color={theme.colors.primary} */>
-                                    {contractData.symbol}
-                                </Badge>
-                            </td>
+        contractAddresses.length > 0 ? (
+            <Container className={classes.container}>
+                <h2 className={classes.tableHeading}>Owned Contracts</h2>
+                <Table striped highlightOnHover withBorder withColumnBorders>
+                    <thead>
+                        <tr>
+                            <th>Contract</th>
+                            <th>Deployer</th>
+                            <th>Block</th>
+                            <th>Name</th>
+                            <th>Symbol</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
-        </Container>
+                    </thead>
+                    <tbody>
+                        {contractAddresses.map((contractData, i) => (
+                            <tr key={i}>
+                                <td>
+                                    <Tooltip label={contractData.address}>
+                                        <span>{shortenAddress(contractData.address)}</span>
+                                    </Tooltip>
+                                </td>
+                                <td>
+                                    <Tooltip label={contractData.contractDeployer}>
+                                        <span>{shortenAddress(contractData.contractDeployer)}</span>
+                                    </Tooltip>
+                                </td>
+                                <td>{contractData.deployedBlockNumber}</td>
+                                <td>{contractData.name}</td>
+                                <td>
+                                    <Badge /* color={theme.colors.primary} */>
+                                        {contractData.symbol}
+                                    </Badge>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </Container>
+        ) : (
+            <p style={{ textAlign: "center", marginTop: "2rem" }}>This address doesn't own a contract.</p>
+        )
     );
 }

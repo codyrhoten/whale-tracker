@@ -26,14 +26,14 @@ const useStyles = createStyles((theme) => ({
 
 export default function WalletInputForm({
     setContractData,
-    onAddressChange,
+    handleAddressChange,
     address,
     error,
     setError
 }: {
     error: string;
-    address: any;
-    onAddressChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    address: string;
+    handleAddressChange: (e: ChangeEvent<HTMLInputElement>) => void;
     setError: (error: string) => void;
     setContractData: (contractData: ContractData[]) => void;
 }) {
@@ -116,11 +116,6 @@ export default function WalletInputForm({
         }
     };
 
-    /* const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setAddress(e.target.value);
-        setError("");
-    }; */
-
     const { classes } = useStyles();
 
     return (
@@ -137,8 +132,8 @@ export default function WalletInputForm({
                 }
                 {error && <div className={classes.error}>{error}</div>}
                 <TextInput
-                    value={address.current}
-                    onChange={onAddressChange}
+                    value={address}
+                    onChange={handleAddressChange}
                     placeholder="Enter Ethereum address"
                     className={classes.input}
                 />
