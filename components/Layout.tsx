@@ -1,7 +1,8 @@
-import { useAccount } from "wagmi";
 import { HeaderSimple } from "./HeaderSimple";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+    // const [connectedWalletAddress, setConnectedWalletAddress] = useState("");
+    
     const links = [
         {
             link: "/about",
@@ -12,8 +13,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             label: "Contact"
         }
     ];
-
-    // useEffect here that depends on wagmi's watchAccount event?
 
   return (
     <>

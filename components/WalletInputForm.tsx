@@ -37,9 +37,7 @@ export default function WalletInputForm({
     setError: (error: string) => void;
     setContractData: (contractData: ContractData[]) => void;
 }) {
-    console.log('address', address);
     const walletContext = useWalletContext();
-    console.log(walletContext);
     const [checked, setChecked] = useState(false); // MOVE THIS TO INDEX AND PASS TO THIS ONE AS PROP
 
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
