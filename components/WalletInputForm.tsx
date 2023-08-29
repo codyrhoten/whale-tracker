@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useWalletContext } from "@/contexts/WalletContext";
 import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
@@ -38,7 +38,8 @@ export default function WalletInputForm({
     setContractData: (contractData: ContractData[]) => void;
 }) {
     const walletContext = useWalletContext();
-    const [checked, setChecked] = useState(false); // MOVE THIS TO INDEX AND PASS TO THIS ONE AS PROP
+    const [checked, setChecked] = useState(false);
+    const [displayedAddress, setDisplayedAddress] = useState('');
 
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
     const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyApiKey);
@@ -71,6 +72,16 @@ export default function WalletInputForm({
 
         return isValidAddress;
     };
+
+    const handleSwitchChange = () => {
+        if (checked) {
+            setDisplayedAddress(walletContext?.connectedWalletAddress || '');
+        } else {
+            setDisplayedAddress('');
+        }
+        setChecked(!checked);
+    };
+
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -125,12 +136,12 @@ export default function WalletInputForm({
                         label="Auto-fill with your connected wallet address"
                         radius="lg"
                         checked={checked}
-                        onChange={(e) => setChecked(e.currentTarget.checked)}
+                        onChange={handleSwitchChange}
                     />
                 }
                 {error && <div className={classes.error}>{error}</div>}
                 <TextInput
-                    value={address}
+                    value={checked ? walletContext?.connectedWalletAddress : address}
                     onChange={handleAddressChange}
                     placeholder="Enter Ethereum address"
                     className={classes.input}
