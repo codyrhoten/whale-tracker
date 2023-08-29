@@ -1,7 +1,11 @@
+import { useAccount } from 'wagmi';
+import { useWalletContext } from "@/contexts/WalletContext";
+import { useEffect } from 'react';
 import { HeaderSimple } from "./HeaderSimple";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    // const [connectedWalletAddress, setConnectedWalletAddress] = useState("");
+    const { address, isDisconnected } = useAccount();
+    const walletContext = useWalletContext();
     
     const links = [
         {
@@ -13,6 +17,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
             label: "Contact"
         }
     ];
+
+    useEffect(() => {
+        if (address) {
+            walletContext?.setConnectedWalletAddress(address);
+        }
+
+        if (isDisconnected) {
+            walletContext?.setConnectedWalletAddress('');
+        }
+    }, [address]);
 
   return (
     <>

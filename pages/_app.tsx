@@ -1,8 +1,5 @@
 import '@/styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css';
-import { useWalletContext } from "@/contexts/WalletContext";
-import { useAccount } from 'wagmi';
-import { useEffect } from 'react';
 import type { AppProps } from "next/app";
 import Head from 'next/head';
 import { getDefaultWallets, RainbowKitProvider, } from '@rainbow-me/rainbowkit';
@@ -17,9 +14,6 @@ import { Layout } from '@/components/Layout';
 export default function App(props: AppProps) {
     const apiKey: string | undefined = process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? 'No alchemy key entered.';
     const alchemyConfig = { apiKey };
-    // throws error in front end after running because useConfig must be used within 'WagmiConfig' component 
-    const { address, isDisconnected } = useAccount()
-    const walletContext = useWalletContext();
 
     const { chains, publicClient } = configureChains(
         [mainnet],
@@ -38,10 +32,6 @@ export default function App(props: AppProps) {
     });
 
     const { Component, pageProps } = props;
-
-    useEffect(() => {
-        console.log(address);
-    }, []);
 
     return (
         <>

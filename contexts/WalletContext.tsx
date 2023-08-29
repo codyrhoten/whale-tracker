@@ -18,11 +18,7 @@ export function useWalletContext() {
 
 export function WalletProvider({ children }: WalletProviderProps) {
     const [connectedWalletAddress, setConnectedWalletAddress] = useState<string>('');
-
-    const contextValue = {
-        connectedWalletAddress,
-        setConnectedWalletAddress
-    }
+    const contextValue = { connectedWalletAddress, setConnectedWalletAddress };
 
     return (
         <WalletContext.Provider value={contextValue}>
