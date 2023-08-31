@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useWalletContext } from "@/contexts/WalletContext";
 import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
@@ -20,7 +20,6 @@ const useStyles = createStyles((theme) => ({
     },
     error: {
         color: theme.colors.red[7],
-        marginTop: "1.25rem"
     },
 }));
 
@@ -145,7 +144,9 @@ export default function WalletInputForm({
                         onChange={handleSwitchChange}
                     />
                 }
-                {error && <div className={classes.error}>{error}</div>}
+                <div style={{ minHeight: "1rem", maxHeight: "1rem", marginTop: "0.25rem", }}>
+                    {error && <div className={classes.error}>{error}</div>}
+                </div>
                 <TextInput
                     value={checked ? walletContext?.connectedWalletAddress : address}
                     onChange={handleAddressChange}
