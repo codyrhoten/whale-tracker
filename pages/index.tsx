@@ -13,24 +13,16 @@ type ContractData = {
 
 export default function Home() {
     const [contractData, setContractData] = useState<ContractData[]>([]);
-    const [address, setAddress] = useState("");
     const [error, setError] = useState("");
 
     const handleSetContractData = (data: any) => {
         setContractData(data);
     };
 
-    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setAddress(e.target.value);
-        setError("");
-    };
-
     return (
         <>
             <WalletInputForm
-                address={address}
                 setContractData={handleSetContractData}
-                handleAddressChange={handleAddressChange}
                 error={error}
                 setError={setError}
             />

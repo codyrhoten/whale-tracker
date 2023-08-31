@@ -26,23 +26,27 @@ const useStyles = createStyles((theme) => ({
 
 export default function WalletInputForm({
     setContractData,
-    handleAddressChange,
-    address,
     error,
     setError
 }: {
     error: string;
-    address: string;
-    handleAddressChange: (e: ChangeEvent<HTMLInputElement>) => void;
     setError: (error: string) => void;
     setContractData: (contractData: ContractData[]) => void;
 }) {
     const walletContext = useWalletContext();
+    const [address, setAddress] = useState("");
     const [checked, setChecked] = useState(false);
-    const [displayedAddress, setDisplayedAddress] = useState('');
-
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
     const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyApiKey);
+
+    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setAddress(e.target.value);
+        setError("");
+
+        if (checked) {
+            setChecked(false);
+        }
+    };
 
     const isValidENSAddress = async (address: string) => {
         try {
@@ -75,11 +79,13 @@ export default function WalletInputForm({
 
     const handleSwitchChange = () => {
         if (checked) {
-            setDisplayedAddress(walletContext?.connectedWalletAddress || '');
+            setAddress(walletContext?.connectedWalletAddress || "");
         } else {
-            setDisplayedAddress('');
+            setAddress("");
         }
+
         setChecked(!checked);
+        setError("");
     };
 
 
@@ -101,16 +107,16 @@ export default function WalletInputForm({
 
         try {
             const response = await axios.post(
-                '/api/get-contract-for-owner',
+                "/api/get-contract-for-owner",
                 { address },
                 {
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     }
                 }
             );
             const { data } = response;
-            console.log('data', data)
+            console.log("data", data)
 
             if (data.error) {
                 setError(data.error);
