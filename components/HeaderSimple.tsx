@@ -1,7 +1,8 @@
+import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { createStyles, Header, Container, Group, Burger, rem } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantine/ds';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -76,6 +77,7 @@ export function HeaderSimple({ links }: HeaderSimpleProps) {
         <Group spacing={5} className={classes.links}>
           {items}
         </Group>
+        <ConnectButton />
 
         <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
       </Container>

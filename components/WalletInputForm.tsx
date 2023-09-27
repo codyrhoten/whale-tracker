@@ -1,5 +1,6 @@
-import { ChangeEvent, FormEvent } from "react";
-import { createStyles, TextInput, Button, Container } from "@mantine/core";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useWalletContext } from "@/contexts/WalletContext";
+import { createStyles, TextInput, Button, Container, Switch } from "@mantine/core";
 import { ethers } from "ethers";
 import axios from "axios";
 
@@ -24,21 +25,27 @@ const useStyles = createStyles((theme) => ({
 
 export default function WalletInputForm({
     setContractData,
-    address,
     error,
-    setAddress,
     setError
 }: {
-    address: string;
-    setAddress: (address: string) => void;
     error: string;
     setError: (error: string) => void;
     setContractData: (contractData: ContractData[]) => void;
 }) {
-    console.log('address', address);
-
+    const walletContext = useWalletContext();
+    const [address, setAddress] = useState("");
+    const [checked, setChecked] = useState(false);
     const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
     const provider = new ethers.providers.AlchemyProvider("mainnet", alchemyApiKey);
+
+    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setAddress(e.target.value);
+        setError("");
+
+        if (checked) {
+            setChecked(false);
+        }
+    };
 
     const isValidENSAddress = async (address: string) => {
         try {
@@ -69,8 +76,20 @@ export default function WalletInputForm({
         return isValidAddress;
     };
 
+    const handleSwitchChange = () => {
+        if (checked) {
+            setAddress(walletContext?.connectedWalletAddress || "");
+        } else {
+            setAddress("");
+        }
+
+        setChecked(!checked);
+        setError("");
+    };
+
+
     const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();        
+        e.preventDefault();
         const isValid = await validateWalletAddress(address);
 
         if (!isValid) {
@@ -87,16 +106,16 @@ export default function WalletInputForm({
 
         try {
             const response = await axios.post(
-                '/api/get-contract-for-owner',
+                "/api/get-contract-for-owner",
                 { address },
                 {
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     }
                 }
             );
             const { data } = response;
-            console.log('data', data)
+            console.log("data", data)
 
             if (data.error) {
                 setError(data.error);
@@ -111,19 +130,25 @@ export default function WalletInputForm({
         }
     };
 
-    const handleAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setAddress(e.target.value);
-        setError("");
-    };
-
     const { classes } = useStyles();
 
     return (
         <Container>
             <form onSubmit={handleSubmit}>
-                {error && <div className={classes.error}>{error}</div>}
+                {
+                    walletContext?.connectedWalletAddress &&
+                    <Switch
+                        label="Auto-fill with your connected wallet address"
+                        radius="lg"
+                        checked={checked}
+                        onChange={handleSwitchChange}
+                    />
+                }
+                <div style={{ minHeight: "1rem", maxHeight: "1rem", marginTop: "0.25rem", }}>
+                    {error && <div className={classes.error}>{error}</div>}
+                </div>
                 <TextInput
-                    value={address}
+                    value={checked ? walletContext?.connectedWalletAddress : address}
                     onChange={handleAddressChange}
                     placeholder="Enter Ethereum address"
                     className={classes.input}

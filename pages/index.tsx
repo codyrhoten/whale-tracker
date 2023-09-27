@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, ChangeEvent } from "react";
 import ContractDataTable from "@/components/ContractDataTable";
 import WalletInputForm from "@/components/WalletInputForm";
 
@@ -13,7 +13,6 @@ type ContractData = {
 
 export default function Home() {
     const [contractData, setContractData] = useState<ContractData[]>([]);
-    const [address, setAddress] = useState("");
     const [error, setError] = useState("");
 
     const handleSetContractData = (data: any) => {
@@ -22,12 +21,10 @@ export default function Home() {
 
     return (
         <>
-            <WalletInputForm 
-                setContractData={handleSetContractData} 
-                address={address} 
-                error={error} 
-                setAddress={setAddress} 
-                setError={setError} 
+            <WalletInputForm
+                setContractData={handleSetContractData}
+                error={error}
+                setError={setError}
             />
             {
                 Object.values(contractData).length > 0 &&
